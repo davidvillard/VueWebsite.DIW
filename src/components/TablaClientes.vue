@@ -1,8 +1,8 @@
 <template>
     <div>
-        <NavBar/>
+        <NavBar />
     </div>
-   
+
     <div class="container mt-5">
         <h2 class="text-center mb-4">Mi Formulario</h2>
         <div class="form-inline">
@@ -51,8 +51,10 @@
                     <td>{{ cliente.email }}</td>
                     <td class="text-center">
                         <div class="text-center">
-                            <button class="btn btn-warning mx-2" @click="modificarCliente(cliente.id)"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-danger" @click="eliminarCliente(cliente.id)"><i class="bi bi-trash3"></i></button>
+                            <button class="btn btn-warning mx-2" @click="modificarCliente(cliente.id)"><i
+                                    class="bi bi-pencil"></i></button>
+                            <button class="btn btn-danger" @click="eliminarCliente(cliente.id)"><i
+                                    class="bi bi-trash3"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -71,43 +73,36 @@ export default {
     },
     data() {
         return {
-            nombre: '',
-            apellido: '',
-            dni: '',
-            email: '',
-            clientes: [
-                {
-                    id: 1,
-                    nombre: "Juan",
-                    apellido: "Perez",
-                    dni: "43605166H",
-                    email: "juanperez@gmail.com"
-                },
-                {
-                    id: 2,
-                    nombre: "María",
-                    apellido: "Abal",
-                    dni: "82592350V",
-                    email: "mariaabal@gmail.com"
-                },
-                {
-                    id: 3,
-                    nombre: "Pedro",
-                    apellido: "García",
-                    dni: "08019996B",
-                    email: "pedrogarcia@gmail.com"
-                },
-                {
-                    id: 4,
-                    nombre: "Manu",
-                    apellido: "Chaves",
-                    dni: "03317861L",
-                    email: "manuChaves@gmail.com"
-                }
-            ]
-        }
+            clientes: [],
+            clienteSeleccionado: null,
+            nombre: "",
+            apellido: "",
+            dni: "",
+            email: "",
+        };
     },
     methods: {
+
+        async obtenerCliente() {
+            try {
+                const response = await fetch('https://localhost:3000/clientes');
+                if (!response.ok) {
+                    throw new Error('No se pudieron obtener los datos');
+                }
+
+                const data = await response.json();
+
+                this.clientes = data;
+            } catch (error) {
+                console.error('Error al obtener los clientes', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudieron obtener los datos del servidor',
+                });
+            }
+        },
+
         guardar() {
             //Controlar que los campos no esten vacios
             if (this.nombre.trim() === '' || this.apellido.trim() === '' || this.dni.trim() === '' || this.email.trim() === '') {
@@ -166,14 +161,14 @@ export default {
             let letraCalculada = 'TRWAGYFPDXBNJZSQVHLCKE'.charAt(numero % 23);
             // validar el digito de control
             const valor = dniNie.replace(/[XYZ]/, (letra) => {
-            return letra ==='X' ? '0' : (letra === 'Y' ? '1' : (letra === 'Z' ? '2' : letra))
+                return letra === 'X' ? '0' : (letra === 'Y' ? '1' : (letra === 'Z' ? '2' : letra))
             });
 
             const numero = parseInt(valor.slice(0, 9), 10);
-            
+
 
             // Verificar si es un NIE (XYZ)
-            
+
 
             if (letraCalculada !== dniNie.charAt(8)) {
                 this.mostrarAlerta('DNI o NIE no valido', 'error');
@@ -240,5 +235,4 @@ export default {
 .input-group {
     width: 80%;
 }
-
 </style>
