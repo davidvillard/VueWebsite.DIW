@@ -1,7 +1,11 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import TablaClientes from '@/components/TablaClientes.vue'
-import PaginaInicio from '@/components/PaginaInicio.vue'
-import NotFound from '@/components/NotFound.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import TablaClientes from '@/components/TablaClientes.vue';
+import PaginaInicio from '@/components/PaginaInicio.vue';
+import NotFound from '@/components/NotFound.vue';
+import TablaTareas from '@/components/TablaTareas.vue';
+
+
+
 
 const routes = [
   {
@@ -18,6 +22,11 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'notfound',
     component: NotFound
+  },
+  {
+    path: '/tareas',
+    name: 'not-found',
+    component: TablaTareas
   }
 ]
 

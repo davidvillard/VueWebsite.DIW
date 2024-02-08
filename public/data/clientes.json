@@ -1,54 +1,6 @@
 {
   "clientes": [
     {
-      "id": "1",
-      "dni": "65412378X",
-      "alta": "19/10/2023",
-      "apellido": "Barros Núñez",
-      "nombre": "Alfredo",
-      "direccion": "Calle Urzaiz, 2 4ºf",
-      "provincia": "Pontevedra",
-      "municipio": "Vigo",
-      "movil": 654789125,
-      "email": "alfredo@mail.com"
-    },
-    {
-      "id": "2",
-      "dni": "55663311E",
-      "alta": "02/10/2023",
-      "apellido": "Abal Solla",
-      "nombre": "María",
-      "direccion": "Calle Progreso, 5, 6ºa",
-      "provincia": "Ourense",
-      "municipio": "Ourense",
-      "movil": 722568945,
-      "email": "alvaro@corre.es"
-    },
-    {
-      "id": "7",
-      "dni": "11111111H",
-      "alta": "01/10/2023",
-      "apellido": "Ruiz Solla",
-      "nombre": "Alvaro",
-      "direccion": "Calle Santiago Mayor, 34",
-      "provincia": "A Coruña",
-      "municipio": "Bergondo",
-      "movil": 654789456,
-      "email": "alfredo@mail.com"
-    },
-    {
-      "id": "8",
-      "dni": "Y2345678Z",
-      "alta": "31/10/2023",
-      "apellido": "Salam Alí",
-      "nombre": "Jasmina",
-      "direccion": "Calle Muralla, 2",
-      "provincia": "Lugo",
-      "municipio": "Láncara",
-      "movil": 775645654,
-      "email": "jasmina@cole.com"
-    },
-    {
       "id": "9",
       "dni": "44564564V",
       "alta": "06/11/2023",
