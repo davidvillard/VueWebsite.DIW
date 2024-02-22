@@ -1,22 +1,22 @@
 import  express  from "express";
 import  http  from "http";
 import morgan from "morgan";
-import tareasRouter from './router/tareas.mjs';
 import mongoose from "mongoose";
 import cors from "cors";
+import tareasRouter from './router/tareas.mjs';
+import multer from "multer";
 
 
-
+// crea el servidor
 const app = express();
-
 const server = http.createServer(app);
-
 app.use(cors());
-
-app.use('/tareas', tareasRouter);
-
 app.use(morgan('dev'));
 app.use(express.json());
+app.use('/tareas', tareasRouter);
+
+const upload = multer({ dest: 'uploads/' });
+app.use(upload.single('archivo'));
 
 app.set('port', process.env.PORT || 500);
 

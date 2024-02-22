@@ -1,19 +1,29 @@
-
 import express  from "express";
 const rutas = express.Router();
+import multer from "multer";
 
 import tarea from "../models/tarea.mjs";
 
 rutas.use(express.json());
+const upload = multer({ dest: 'uploads/' });
 
 rutas.get('/', async (req, res) => {
+  try {
     const tareas = await tarea.find()
     res.json(tareas);
+  } catch (error) {
+    res.status(500).json({ error: error.message});
+  }
 });
 
 
-rutas.post('/', async(req, res) => {
+rutas.post('/',upload.single('archivo') , async(req, res) => {
     try {
+      if(req.file){
+        console.log('archivo subido:', req.file);
+      }else{
+        console.log('no se subio ningun archivo');
+      }
       const nuevatarea = new tarea(req.body);
       
       await nuevatarea.save();

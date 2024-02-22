@@ -59,6 +59,9 @@
       },
       articulosExists() {
         return this.$router.hasRoute('articulos');
+      },
+      tareasExists() {
+        return this.$router.hasRoute('tareas');
       }
     }
   };

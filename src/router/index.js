@@ -19,14 +19,14 @@ const routes = [
     component: TablaClientes
   },
   {
-    path: '/:pathMatch(.*)*',
-    name: 'notfound',
-    component: NotFound
+    path: '/tareas',
+    name: 'tareas',
+    component: TablaTareas
   },
   {
-    path: '/tareas',
+    path: '/:pathMatch(.*)*',
     name: 'not-found',
-    component: TablaTareas
+    component: NotFound
   }
 ]
 
