@@ -22,3 +22,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+# VueWebsite.DIW
+Pagina para utilizar en el examen de Vue
