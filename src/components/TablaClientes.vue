@@ -40,40 +40,39 @@
 
     <hr class="container">
     <div id="TablaClientes" class="container my-3">
-        <div class="row">
-            <h5 class="text-center font-weight-bold">Listado Clientes</h5>
-        </div>
-        <table class='table table-striped table-bordered '>
-            <thead class="table-info">
-                <tr class='table table-primary text-center'>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>DNI</th>
-                    <th>Correo Electrónico</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for='cliente in clientes' :key="cliente.id" class="table table-secondary">
-                    <td>{{ cliente.nombre }}</td>
-                    <td>{{ cliente.apellido }}</td>
-                    <td class="text-center">{{ cliente.dni }}</td>
-                    <td>{{ cliente.email }}</td>
-                    <td class="text-center">
-                        <div class="text-center">
-                            <button class='btn btn-warning m-2' type="button" @click="modificarCliente(cliente.id)">
-                                <i class="bi bi-pencil-fill"></i>
-                            </button>
-                            <button class='btn btn-danger m-2' type="button" @click="eliminarCliente(cliente.id)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="row">
+    <h5 class="text-center font-weight-bold">Listado Clientes</h5>
+  </div>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="table-info">
+      <tr class="text-center">
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>DNI</th>
+        <th>Correo Electrónico</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="cliente in clientes" :key="cliente.id" class="text-center">
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.apellido }}</td>
+        <td>{{ cliente.dni }}</td>
+        <td>{{ cliente.email }}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button class="btn btn-warning" type="button" @click="modificarCliente(cliente.id)">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-danger" type="button" @click="eliminarCliente(cliente.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </template>
 
 <script>
@@ -115,28 +114,32 @@ export default {
 
         },
 
-        guardar() {
-            if (this.dni.trim() === '' || this.nombre.trim() === '' || this.apellido.trim() === "" || this.email.trim() === "") {
-                this.mostrarAlerta("Debe completar los campos", "warning");
-            } else {
+        async guardar() {
+            if (this.nombre.trim() === '' || this.apellido.trim() === '' || this.dni.trim() === '' || this.email.trim() === '') {
+                this.mostrarAlerta("Debe completar todos los campos", "Warning")
+                return
+            }
+
                 const nuevoCliente = {
                     id: this.clientes.length + 1,
                     nombre: this.nombre.trim().toUpperCase(),
                     apellido: this.apellido.trim().toUpperCase(),
                     dni: this.dni.trim().toUpperCase(),
-                    email: this.email.trim(),
-                };
+                    email: this.email.trim()
+                }
 
-                this.clientes.push(nuevoCliente);
+                await fetch('http://localhost:3000/clientes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(nuevoCliente)
+                })
 
-                this.nombre = nuevoCliente.nombre;
-                this.apellido = nuevoCliente.apellido;
-                this.dni = nuevoCliente.dni;
-                this.email = nuevoCliente.email;
+                this.limpiar()
 
-                this.mostrarAlerta("Cliente guardado correctamente", "success")
-            }
-        },
+                this.mostrarAlerta("Cliente guardado con exito", "success")
+            },
         limpiar() {
             this.nombre = "";
             this.apellido = "";

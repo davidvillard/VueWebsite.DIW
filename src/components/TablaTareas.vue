@@ -89,47 +89,47 @@
     </div>
 
     <hr>
-    <div id="TablaClientes" class="container my-3">
-        <div class="row">
-            <h5 class="text-center font-weight-bold">Listado Tareas</h5>
-        </div>
-        <table class='table table-striped table-bordered '>
-            <thead class="table-info">
-                <tr class='table table-primary text-center'>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripcion</th>
-                    <th>Fecha Alta</th>
-                    <th>Sala Reunión</th>
-                    <th>Equipamiento</th>
-                    <th>Prioridad</th>
-                    <th>Gestión</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for='tarea in tareas' :key="tarea.id" class="table ">
-                    <td class="text-center">{{ tarea._id }}</td>
-                    <td>{{ tarea.nombre }}</td>
-                    <td>{{ tarea.descripcion }}</td>
-                    <td class="text-center">{{ tarea.fecha }}</td>
-                    <td class="text-center">{{ tarea.sala }}</td>
-                    <td class="text">{{ tarea.equipos.join(', ') }}</td>
-                    <td class="text-center">{{ tarea.prioridad }}</td>
-                    <td class="text-center">
-                        <div class="text-center">
-                            <button class='btn btn-warning m-2' type="button" @click="cargarTarea(tarea)">
-                                <i class="bi bi-pencil-fill"></i>
-                            </button>
-                            <button class='btn btn-danger m-2' type="button" @click="eliminarTarea(tarea.id)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
+    <div id="TablaTareas" class="container my-3">
+  <div class="row">
+    <h5 class="text-center font-weight-bold">Listado Tareas</h5>
+  </div>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="table-info">
+      <tr class="text-center">
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Fecha Alta</th>
+        <th>Sala Reunión</th>
+        <th>Equipamiento</th>
+        <th>Prioridad</th>
+        <th>Gestión</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="tarea in tareas" :key="tarea.id" class="text-center">
+        <td>{{ tarea._id }}</td>
+        <td>{{ tarea.nombre }}</td>
+        <td>{{ tarea.descripcion }}</td>
+        <td>{{ tarea.fecha }}</td>
+        <td>{{ tarea.sala }}</td>
+        <td>{{ tarea.equipos.join(', ') }}</td>
+        <td>{{ tarea.prioridad }}</td>
+        <td>
+          <div class="btn-group" role="group">
+            <button class="btn btn-warning" type="button" @click="cargarTarea(tarea)">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-danger" type="button" @click="eliminarTarea(tarea._id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
 </template>
 
 <script>
@@ -277,12 +277,12 @@ export default {
             this.observaciones = tarea.observaciones;
             this.tareaSeleccionada = tarea;
         },
-        async eliminarTarea(id){
-            try{
+        async eliminarTarea(id) {
+            try {
                 const res = await fetch(`http://localhost:500/tareas/${id}`, {
                     method: 'DELETE'
                 });
-                if(!res.ok){
+                if (!res.ok) {
                     const message = `Ha ocurrido un error: $ ${res.status}`;
                     throw new Error(message);
                 }
@@ -294,7 +294,7 @@ export default {
                 });
 
                 await this.obtenerTareas();
-            }catch(error){
+            } catch (error) {
                 console.error(error);
                 await Swal.fire({
                     icon: 'error',
@@ -348,6 +348,10 @@ export default {
                     text: 'Ha ocurrido un error al intentar modificar la tarea. Por favor, inténtalo de nuevo'
                 })
             }
+        },
+            handleFileChange(evento){
+                this.archivo = evento.target.files[0];
+                console.log(this.archivo);
         }
 
     }

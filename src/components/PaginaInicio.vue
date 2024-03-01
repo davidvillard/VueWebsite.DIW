@@ -1,54 +1,72 @@
 <template>
+  <div>
+    <NavBar />
     <div>
-        <NavBar/>
+      <h1 class="text-center mt-5">Proyecto de {{ alumno_a }}</h1>
     </div>
-    <div>
-        <h1 class="text-center"> Pagina Proyecto de {{ alumno_a }}</h1>
-    </div>
-    <div class="cont text-center">
-        <div class="container my-5">
-            <button type="button" class="btn btn-primary btn-lg mx-2 boton"> <a href="/clientes" class="link-light link-offset-2 link-underline link-underline-opacity-0">Gestion clientes</a> </button>
-            <button type="button" class="btn btn-primary btn-lg mx-2 boton"><a href="#" class="link-light link-offset-2 link-underline link-underline-opacity-0">Gestion articulos</a> </button>
+    <div class="container cont mt-5 text-center">
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <button type="button" class="btn btn-primary btn-lg boton py-5">
+            <router-link to="/clientes" class="link-light link-offset-2 link-underline link-underline-opacity-0">
+              Gestion clientes
+            </router-link>
+          </button>
         </div>
-        <div class="container my-5">
-            <button type="button" class="btn btn-primary btn-lg mx-2 boton"><a href="#" class="link-light link-offset-2 link-underline link-underline-opacity-0">Gestion ventas</a> </button>
-            <button type="button" class="btn btn-primary btn-lg mx-2 boton"><a href="#" class="link-light link-offset-2 link-underline link-underline-opacity-0">Contacto</a> </button>
+        <div class="col-md-6 mb-4">
+          <button type="button" class="btn btn-primary btn-lg boton py-5">
+            <router-link to="/articulos" class="link-light link-offset-2 link-underline link-underline-opacity-0">
+              Gestion articulos
+            </router-link>
+          </button>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <button type="button" class="btn btn-primary btn-lg boton py-5">
+            <router-link to="/ventas" class="link-light link-offset-2 link-underline link-underline-opacity-0">
+              Gestion ventas
+            </router-link>
+          </button>
+        </div>
+        <div class="col-md-6 mb-4">
+          <button type="button" class="btn btn-primary btn-lg boton py-5">
+            <router-link to="/contacto" class="link-light link-offset-2 link-underline link-underline-opacity-0">
+              Contacto
+            </router-link>
+          </button>
+        </div>
+      </div>
     </div>
-
-
-
+  </div>
 </template>
+
 <script>
+import NavBar from '@/components/NavBar.vue';
 
-import NavBar from '@/components/NavBar.vue'
-
-export default{
-    name: 'PaginaInicio',
-    components: {
-        NavBar
-    },
-    data(){
-        return{
-            alumno_a: 'David'
-        }
-    },
-    mounted(){
-        console.log('Componente PaginaInicio.vue cargado')
-    }
-}
+export default {
+  name: 'PaginaInicio',
+  components: {
+    NavBar,
+  },
+  data() {
+    return {
+      alumno_a: 'David',
+    };
+  },
+  mounted() {
+    console.log('Componente PaginaInicio.vue cargado');
+  },
+};
 </script>
 
 <style>
 .boton {
-    width: 250px; /* Ajusta el ancho según tus necesidades */
-    height: 200px; /* Ajusta la altura según tus necesidades */
-    margin-right: 30px; /* Ajusta el margen derecho según tus necesidades */
-    margin-left: 30px; 
-    margin: -15px;/* Ajusta el margen izquierdo según tus necesidades */
+  width: 100%;
+  height: 100%;
 }
 
 .cont {
-    margin-top: 10%;
+  margin-top: 10%;
 }
 </style>
