@@ -310,11 +310,18 @@
       "email": "luis@caspio.com"
     },
     {
-      "id": 29,
+      "id": "29",
       "nombre": "ISABEL LOLA",
       "apellido": "SANTOS ÁLVAREZ",
       "dni": "44564564V",
       "email": "isabel@correo.com"
+    },
+    {
+      "id": 29,
+      "nombre": "LUIS",
+      "apellido": "GONZÁLEZ ARIAS",
+      "dni": "56464123C",
+      "email": "luis@caspio.com"
     }
   ]
 }

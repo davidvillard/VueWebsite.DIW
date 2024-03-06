@@ -113,7 +113,7 @@
         <td>{{ tarea.descripcion }}</td>
         <td>{{ tarea.fecha }}</td>
         <td>{{ tarea.sala }}</td>
-        <td>{{ tarea.equipos.join(', ') }}</td>
+       <td>{{ tarea.equipos.join(', ') }}</td>   <!--Array en donde se almacenan los equipos -->
         <td>{{ tarea.prioridad }}</td>
         <td>
           <div class="btn-group" role="group">
@@ -147,40 +147,57 @@ export default {
             descripcion: "",
             fecha: "",
             sala: "",
-            equipos:[],
+            equipos:[], // Array de los equipos
             prioridad: "alta",
-            tareas: [],
+            tareas: [], // Array de las tareas que se van a mostrar en la tabla
             observaciones: "",
             show: false
         };
     },
     created() {
-        this.obtenerTareas();
+        this.obtenerTareas(); // Se llama a la función obtenerTareas para que se muestren las tareas en la tabla
     },
     mounted(){
+        // Se inicializa el calendario con flatpickr
         const fechaAlta = this.$refs.fechaAlta;
         flatpickr(fechaAlta,{});
     },
     methods: {
+        /**
+         * Metodo con el que se obtienen las tareas de la base de datos
+         */
         async obtenerTareas() {
+            // Hacemis una peticion a la base de datos para obtener las tareas
             try {
                 const res = await fetch('http://localhost:500/tareas');
+                // Si la respuesta no es correcta se lanza un error
                 if (!res.ok) {
                     const message = `Ha ocurrido un error:  ${res.status}`;
                     throw new Error(message);
                 }
+                // Si la respuesta es correcta se almacenan las tareas en el array tareas que definimos arriba
                 this.tareas = await res.json();
                 console.log(this.tareas);
             } catch (error) {
+                // Si hay un error se muestra en consola
                 console.error(error)
             }
         },
+        /**
+         * Metodo para abrir el calendario
+         
+         */
         abrirCalendario(){
             const fechaAlta = this.$refs.fechaAlta;
             if(fechaAlta._flatpickr){
                 fechaAlta._flatpickr.open();
             }
         },
+
+        /**
+         * Metodo para limpiar la tarea
+         * Simplemente se igualan los campos a un string vacio y el array a uno vacio
+         */
         limpiarTarea(){
             this.nombre = "";
             this.descripcion = "";
@@ -192,6 +209,10 @@ export default {
             this.$refs.fileInput.value = null;
 
         },
+        /**
+         * Metodo para limpiar los campos del formulario
+         * Simplemente se igualan los campos a un string vacio y el array a uno vacio
+         */
         limpiarCampos() {
             this.nombre = "";
             this.descripcion = "";
@@ -203,13 +224,17 @@ export default {
             this.archivo = null;
             this.$refs.fileInput.value = null;
             
-
+            // Se muestra un mensaje de confirmación de que los campos se han limpiado
             Swal.fire({
                 icon:'info',
                 title: 'Campos limpiados',
                 text: 'Los campos del formulario se han limpiado correctamente',
             })
         },
+
+        /**
+         * Metodo para guardar la tarea
+         */
         async guardarTarea() {
             try {
                 console.log(this.nombre, this.descripcion, this.fecha, this.sala, this.prioridad);
@@ -222,7 +247,9 @@ export default {
                 //     prioridad: this.prioridad,
                 //     observaciones: this.observaciones,
 
+                // Se crea una instancia de FormData para enviar los datos del formulario
                 const formData = new FormData();
+                // Agregamos los campos del formulario al formData
                 formData.append('nombre',this.nombre);
                 formData.append('descripcion',this.descripcion);
                 formData.append('fecha', this.fecha);
@@ -234,6 +261,7 @@ export default {
                 formData.append('observaciones',this.observaciones);
                 formData.append('archivo',this.archivo);
                 
+                // Si los valores de la prioridad son igual a alta, baja o media se envia la tarea mediante un POST a la base de datos
                 if (['alta', 'baja', 'media'].includes(this.prioridad)) {
                     const res = await fetch('http://localhost:500/tareas', {
                          method: 'POST',
@@ -241,7 +269,7 @@ export default {
                         //     'Content-Type': 'application/json'
                         // },
                         // body: JSON.stringify(nuevaTarea) 
-                        body: formData
+                        body: formData // Esto simplemente significa que estas mandndo los datos del formulario en multipart/form-data
                     });
 
                     await Swal.fire({
@@ -250,16 +278,19 @@ export default {
                         text: 'La nueva tarea se ha guardado correctamente'
                     });
 
+                    // Si la respuesta no es correcta se lanza un error
                     if (!res.ok) {
                         const message = `Ha ocurrido un error: ${res.status}`;
                         throw new Error(message)
                     }
-
+                    // Si la respuesta es correcta se llama a la función obtenerTareas para que se muestren las tareas en la tabla
                     await this.obtenerTareas();
                 }
+                // Se limpian los campos del formulario al terminar de guardar la tarea
                 this.limpiarTarea();
             } catch (error) {
                 console.error(error);
+                // Si hay un error se muestra un mensaje de error
                 await Swal.fire({
                     icon: 'error',
                     title: 'Error al guardar la tarea',
@@ -267,6 +298,8 @@ export default {
                 })
             }
         },
+
+        // Metodo que carga la tarea para ser editada en el formulario
         cargarTarea(tarea) {
             this.nombre = tarea.nombre;
             this.descripcion = tarea.descripcion;
@@ -277,25 +310,30 @@ export default {
             this.observaciones = tarea.observaciones;
             this.tareaSeleccionada = tarea;
         },
+
+        // Metodo que elimina la tarea seleccionada
         async eliminarTarea(id) {
             try {
+                // Se hace una peticion a la base de datos para eliminar la tarea
                 const res = await fetch(`http://localhost:500/tareas/${id}`, {
                     method: 'DELETE'
                 });
+                // Si la respuesta no es correcta se lanza un error
                 if (!res.ok) {
                     const message = `Ha ocurrido un error: $ ${res.status}`;
                     throw new Error(message);
                 }
-
+                // Si es correcta se muestra un mensaje de confirmación
                 await Swal.fire({
                     icon: 'Success',
                     title: '¡Tarea eliminada!',
                     text: 'La tarea se ha eliminado correctamente'
                 });
-
+                // Se llama a la función obtenerTareas para que se muestren las tareas en la tabla despues de la eliminacion
                 await this.obtenerTareas();
             } catch (error) {
                 console.error(error);
+                // Si hay un error se muestra un mensaje de error
                 await Swal.fire({
                     icon: 'error',
                     title: 'Error al eliminar la tarea',
@@ -303,6 +341,8 @@ export default {
                 })
             }
         },
+
+        // Metodo que modifica la tarea seleccionada y la guarda, similar a guardar tarea
         async modificarTarea() {
             try {
                 const tarea = this.tareaSeleccionada;
@@ -349,6 +389,7 @@ export default {
                 })
             }
         },
+        // Metodo que se encarga de actualizar el archivo que se selecciono en el input.
             handleFileChange(evento){
                 this.archivo = evento.target.files[0];
                 console.log(this.archivo);

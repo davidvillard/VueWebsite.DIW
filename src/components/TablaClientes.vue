@@ -86,25 +86,28 @@ export default {
             apellido: '',
             dni: '',
             email: '',
-            clientes: [],
+            clientes: [], // Array que almacena los clientes
             clienteSeleccionado: null,
         }
     },
-    mounted() {
+    mounted() { // Se llama automaticamente al metodo obtenerCliente para cargar los datos de la tabla
         this.obtenerCliente();
     },
     methods: {
+        /**
+         * Obtiene los clientes del servidor y los almacena en el array clientes
+         */
         async obtenerCliente() {
-            try {
-                const response = await fetch('http://localhost:3000/clientes');
+            try { // Intenta hacer la peticion
+                const response = await fetch('http://localhost:3000/clientes'); // Hazemos una peticion a la API
 
-                if (!response.ok) {
-                    throw new Error('No se pudieron obtener los datos del servidor.')
+                if (!response.ok) { // Si la peticion no es correcta
+                    throw new Error('No se pudieron obtener los datos del servidor.') // Lanza un error
                 }
-                const data = await response.json();
+                const data = await response.json(); // Si la peticion es correcta, almacena los datos en la variable data
 
-                this.clientes = data;
-            } catch (error) {
+                this.clientes = data; // Almacena los datos en el array clientes
+            } catch (error) { // Si hay un error en la peticion muestra un mensaje de error con Swal
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -114,12 +117,15 @@ export default {
 
         },
 
+        /**
+         * Guarda un cliente en el servidor (falta el validarDNI pero iba mal)
+         */
         async guardar() {
             if (this.nombre.trim() === '' || this.apellido.trim() === '' || this.dni.trim() === '' || this.email.trim() === '') {
-                this.mostrarAlerta("Debe completar todos los campos", "Warning")
+                this.mostrarAlerta("Debe completar todos los campos", "Warning") // Si algun campo esta vacio muestra un mensaje de alerta
                 return
             }
-
+                // Creamos un objeto con los datos del cliente
                 const nuevoCliente = {
                     id: this.clientes.length + 1,
                     nombre: this.nombre.trim().toUpperCase(),
@@ -127,7 +133,7 @@ export default {
                     dni: this.dni.trim().toUpperCase(),
                     email: this.email.trim()
                 }
-
+                // Hacemos una petición POST al servidor para guardar el cliente
                 await fetch('http://localhost:3000/clientes', {
                     method: 'POST',
                     headers: {
@@ -135,11 +141,14 @@ export default {
                     },
                     body: JSON.stringify(nuevoCliente)
                 })
-
+                // Limpiamos los campos del formulario despues de hacer la petición llamando al metodo limpiar
                 this.limpiar()
-
+                // Mostramos una alerta de que el cliente se ha guardado correctamente
                 this.mostrarAlerta("Cliente guardado con exito", "success")
             },
+            /**
+             * Limpia los campos del formulario y muestra un mensaje de informacion
+             */
         limpiar() {
             this.nombre = "";
             this.apellido = "";
@@ -149,6 +158,10 @@ export default {
             this.mostrarAlerta("Campos limpìados", "info")
             return
         },
+        /**
+         * Valida el DNI o NIE introducido
+         * Aun no esta bien hecho
+         */
         validarDniNie() {
             const dniNie = this.dni.trim().toUpperCase();
             this.dni = dniNie;
@@ -173,6 +186,9 @@ export default {
                 this.dni = "";
             }
         },
+        /**
+         * Metodo padre que muestra una alerta en la que tu eliges el tipo (Swal)
+         */
         mostrarAlerta(mensaje, tipo) {
             Swal.fire({
                 title: mensaje,
@@ -184,22 +200,31 @@ export default {
                 }
             })
         },
+
+        /**
+         * Metodo que elimina a un cliente del servidor
+         */
         async eliminarCliente(clienteId) {
-            const confirmacion = await this.mostrarConfirmacionEliminar();
+            const confirmacion = await this.mostrarConfirmacionEliminar(); // Muestra una ventana de confirmacion para eliminar el cliente
 
-            if (confirmacion) {
+            if (confirmacion) { // Si el usuario confirma la eliminacion
+                // Buscamos el cliente en la array de cliente igualando sus id
                 const index = this.clientes.findIndex(cliente => cliente.id === clienteId);
-
+                // Si el cliente esta en la array hacemos un delete del cliente en el servidor
                 if (index !== -1) {
                     await fetch(`http://localhost:3000/clientes/${clienteId}`, {
                         method: `DELETE`,
                     });
-                    this.mostrarAlerta("Cliente eliminado correctamente", "success")
+                    this.mostrarAlerta("Cliente eliminado correctamente", "success") // Mostramos la alerta de eliminacion del cliente
                 } else {
-                    this.mostrarAlerta("Cliente no encontrado", "error")
+                    this.mostrarAlerta("Cliente no encontrado", "error") // Si el cliente no esta en la array mostramos un mensaje de error
                 }
             }
         },
+
+        /**
+         * Muestra una ventana de confirmacion para eliminar un cliente
+         */
         async mostrarConfirmacionEliminar() {
             // Mostrar ventana de confirmación
             const confirmacion = await Swal.fire({
@@ -220,18 +245,24 @@ export default {
 
             return confirmacion.isConfirmed;
         },
+
+        /**
+         * Metodo que modifica a un cliente del servidor
+         */
         modificarCliente(clienteId) {
+            // Buscamos el cliente en la array de cliente igualando sus id
             const cliente = this.clientes.find(cliente => cliente.id === clienteId);
 
+            // Si el cliente esta en la array mostramos los datos del cliente en el formulario
             if (cliente) {
                 this.nombre = cliente.nombre;
                 this.apellido = cliente.apellido;
                 this.dni = cliente.dni;
                 this.email = cliente.email;
 
-                this.mostrarAlerta("Datos del cliente listos para modificar", "info");
+                this.mostrarAlerta("Datos del cliente listos para modificar", "info"); // Mostramos un mensaje de informacion
             } else {
-                this.mostrarAlerta("Cliente no encontrado", "error");
+                this.mostrarAlerta("Cliente no encontrado", "error"); // Si el cliente no esta en la array mostramos un mensaje de error
             }
         }
     }
